@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\api\Auth\RegisteredUserController;
+use App\Http\Controllers\api\Auth\AuthenticatedSessionController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::group(['prefix' => '/auth', ['middleware' => 'throttle:20,5']], function(){
+    Route::post('/register', [RegisteredUserController::class, 'store']);
+    Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 });

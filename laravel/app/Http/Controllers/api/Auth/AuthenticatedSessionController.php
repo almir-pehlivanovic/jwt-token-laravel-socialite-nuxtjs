@@ -7,9 +7,19 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\JWTAuth;
+use Tymon\JWTAuth\Exception;
+use Illuminate\Support\Facades\Validator;
 
 class AuthenticatedSessionController extends Controller
 {
+    protected $auth;
+
+    public function __construct(JWTAuth $auth)
+    {
+        $this->auth = $auth;
+    }
+
     /**
      * Display the login view.
      *
@@ -28,11 +38,39 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $request->authenticate();
+        try
+        {
+            if(!$token = $this->auth->attempt($request->only('email', 'password')))
+            {
+                return response()->json([
+                    'success' => false,
+                    'errors' => [
+                        'email' => 'Invalid emal address or password!'
+                    ]
+                ], 422);
+            }
 
-        $request->session()->regenerate();
+        }
+        catch(JWTException $e)
+        {
+            return response()->json([
+                'success' => false,
+                'errors' => [
+                    'email' => 'Invalid emal address or password!'
+                ]
+            ], 422);
+        }
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+        return response()->json([
+            'success' => true,
+            'data' => $request->user(),
+            'token' => $token
+        ], 200);
+        // $request->authenticate();
+
+        // $request->session()->regenerate();
+
+        // return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**
