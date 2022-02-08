@@ -22,14 +22,21 @@
                     </button>
                 </div>
             </form>
+        <SocialLogin />
         </div>
     </div>
 </template>
 
 <script>
+
+import SocialLogin from '../../components/SocialLogin.vue';
+
 export default {
     layout: 'base',
     auth: 'guest',
+    components: {
+        SocialLogin
+    },
     data(){
         return{
             form: {
