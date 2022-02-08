@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\api\Auth\RegisteredUserController;
 use App\Http\Controllers\api\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\api\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,4 +24,9 @@ use App\Http\Controllers\api\Auth\AuthenticatedSessionController;
 Route::group(['prefix' => '/auth', ['middleware' => 'throttle:20,5']], function(){
     Route::post('/register', [RegisteredUserController::class, 'store']);
     Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+});
+
+Route::group(['middleware' => 'jwt.auth'], function(){
+    Route::get('/user', [UserController::class, 'index']);
+    Route::get('auth/logout', [UserController::class, 'logout']);
 });
