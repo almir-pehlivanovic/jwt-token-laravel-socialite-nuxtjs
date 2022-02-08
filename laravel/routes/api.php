@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\api\Auth\RegisteredUserController;
 use App\Http\Controllers\api\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\api\Auth\SocialLoginController;
 use App\Http\Controllers\api\UserController;
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,8 @@ use App\Http\Controllers\api\UserController;
 Route::group(['prefix' => '/auth', ['middleware' => 'throttle:20,5']], function(){
     Route::post('/register', [RegisteredUserController::class, 'store']);
     Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+    Route::get('/login/{service}', [SocialLoginController::class, 'redirect']);
+    Route::get('/login/{service}/callback', [SocialLoginController::class, 'callback']);
 });
 
 Route::group(['middleware' => 'jwt.auth'], function(){

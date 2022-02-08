@@ -21,7 +21,7 @@ class SocialMiddleware
 
         foreach($services as $service)
         {
-            if(config('services'.$service))
+            if(config('services.'.$service))
             {
                 $enaledServices[] = $service;
             }
