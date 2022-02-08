@@ -19,6 +19,7 @@
 
 <script>
 export default {
+  layout: 'default',
   name: 'IndexPage'
 }
 </script>

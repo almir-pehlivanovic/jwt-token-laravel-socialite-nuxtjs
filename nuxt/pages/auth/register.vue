@@ -33,6 +33,7 @@
 <script>
 export default {
     layout: 'base',
+    auth: 'guest',
     data(){
         return{
             form: {

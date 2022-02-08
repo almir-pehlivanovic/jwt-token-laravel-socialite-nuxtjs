@@ -42,12 +42,12 @@ export default {
           logout: { url: 'auth/logout', method: 'get' },
           user: { url: '/user', method: 'get', property: 'data' }
         }
-      },
-      // redirect: {
-      //   login: '/auth/login',
-      //   home: '/'
-      // },
-    }
+      }
+    },
+    redirect: {
+      login: '/auth/login',
+      home: '/'
+    },
   },
 
   // Auto import components: https://go.nuxtjs.dev/config-components
