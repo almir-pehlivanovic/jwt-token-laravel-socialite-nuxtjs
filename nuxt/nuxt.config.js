@@ -24,6 +24,32 @@ export default {
   plugins: [
   ],
 
+  auth: {
+    strategies: {
+      local: {
+        token: {
+          property: 'token',
+          global: true,
+          required: true,
+          type: 'Bearer'
+        },
+        user: {
+          property: 'data',
+          autoFetch: true
+        },
+        endpoints: {
+          login: { url: 'auth/login', method: 'post', property: 'token' },
+          logout: { url: 'auth/logout', method: 'get' },
+          user: { url: '/user', method: 'get', property: 'data' }
+        }
+      },
+      // redirect: {
+      //   login: '/auth/login',
+      //   home: '/'
+      // },
+    }
+  },
+
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
@@ -37,12 +63,13 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/auth-next'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: '/',
+    baseURL: 'http://localhost:8000/api',
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
