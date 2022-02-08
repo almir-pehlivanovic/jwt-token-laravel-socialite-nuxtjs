@@ -28,21 +28,22 @@ class SocialLoginController extends Controller
     public function callback($service)
     {
         try{
-
-        }catch (InvalidStateException $e){
-            return redirect(env('CLIENT_BASE_URL') . '/auth/social-callback?error=Unable to login using '. $service . '. Please try again.');
+            $serviceUser = Socialite::driver($service)->stateless()->user();
+        }catch (\Exception $e){
+            return redirect(env('CLIENT_BASE_URL') . '/auth/social-callback?error=Unable to login using '. $service . '. Please try again.' . '&origin=login');
         } 
-
-        $serviceUser = Socialite::driver($service)->stateless()->user();
 
         $email = $serviceUser->getEmail();
         if($service != 'google'){
             $email = $serviceUser->getId() . '@' . $service . '.local';
         }
 
-        $user = $this->getExistingUser($serviceUser, $email, $service);
+        $user       = $this->getExistingUser($serviceUser, $email, $service);
+        $newUser    = false;
+
         if(!$user)
         {
+            $newUser = true;
             $user = User::create([
                 'name' => $serviceUser->getName(),
                 'email' => $email,
@@ -58,7 +59,7 @@ class SocialLoginController extends Controller
             ]);
         }
 
-        return redirect(env('CLIENT_BASE_URL') . '/auth/social-callback?token=' . $this->auth->fromUser($user));
+        return redirect(env('CLIENT_BASE_URL') . '/auth/social-callback?token=' . $this->auth->fromUser($user) . '&origin=' . ($newUser ? 'register' : 'login'));
 
     }
 

@@ -13,15 +13,26 @@
 export default {
     data(){
         return{
-            token: this.$route.query.token ? this.$route.query.token : null
+            token: this.$route.query.token ? this.$route.query.token : null,
+            error: this.$route.query.error ? this.$route.query.error : null,
         }
     },
     mounted(){
-        this.$auth.loginWith('local', { data: {
-            token: this.token
-        }}).catch((e) => {
-            console.log("Your token is not valid. Please try again!");
-        })
+        this.$auth.strategy.token.set(this.token);
+        this.$auth.setStrategy('local');
+
+        this.$auth.fetchUser().then( () => {
+            if(this.error !== null){
+                 return this.$router
+                    .push(`/auth/${this.$route.query.origin ? this.$route.query.origin : 'register'}?error=1`);
+            }else{
+                return this.$router.push('/');
+            }
+        }).catch( (e) => {
+            // this.$auth.logout();
+            return this.$router
+            .push(`/auth/${this.$route.query.origin ? this.$route.query.origin : 'register'}?error=1`);
+        });
     },
 }
 </script>
