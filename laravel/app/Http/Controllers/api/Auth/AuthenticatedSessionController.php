@@ -36,8 +36,29 @@ class AuthenticatedSessionController extends Controller
      * @param  \App\Http\Requests\Auth\LoginRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(LoginRequest $request)
+    public function store(Request $request)
     {
+        $request->validate([
+            'email'     => 'sometimes|required|string|email',
+            'password'  => 'sometimes|required',
+        ]);
+
+        // attempt login with token
+        if($request->input('token'))
+        {
+            $this->auth->setToken($request->input('token'));
+
+            $user = $this->auth->authenticate();
+            if($user)
+            {
+                return response()->json([
+                    'success' => true,
+                    'data' => $request->user(),
+                    'token' => $request->input('token')
+                ], 200);
+            }
+        }
+
         try
         {
             if(!$token = $this->auth->attempt($request->only('email', 'password')))

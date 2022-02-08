@@ -30,7 +30,7 @@ class SocialLoginController extends Controller
         try{
 
         }catch (InvalidStateException $e){
-            return redirect(env('CLIENT_BASE_URL') . '?error=Unable to login using '. $service . '. Please try again.');
+            return redirect(env('CLIENT_BASE_URL') . '/auth/social-callback?error=Unable to login using '. $service . '. Please try again.');
         } 
 
         $serviceUser = Socialite::driver($service)->stateless()->user();
