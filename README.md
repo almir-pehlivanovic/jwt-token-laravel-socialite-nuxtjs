@@ -3,8 +3,6 @@
 ##### Short project description
 The goal of this demo project is to prepare the basic logic for authentication with the jwt token, as well as logging in via social networks (Github, Google, Facebook). The authentication logic is done on the backend laravel API, while the login and layout of the application is done on nuxt js.
 
-The Drag and Drop container allows a maximum of 10 images up to 2MB in .jpg and .jpeg formats.
-
 ### Requirements
 - PHP version 8.0+
 - [Composer v2](https://getcomposer.org/download/ "Composer v2")
